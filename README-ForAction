@@ -1,0 +1,47 @@
+Where to begin:
+---------------
+To Start the application from Console:
+	Go to respective projects in the below order and give the command "mvn spring-boot:run"
+	For product-catalogue application alone, give a port config Eg: "-Dserver.port=8090"
+
+To Start From IDE:
+
+1) Start the GloboServiceDiscoveryApplication - Runs on port 9000 by default
+2) Start ProductCatalogueApplication on port 8090
+3) Start ProductCatalogueApplication on port 8091
+	(2 & 3 will automatically register itself to eureka server)
+4) Start RequestRouterApplication - Runs on port 9001 by default
+5) Start DashboardApplication - Runs on port 9002 by default
+
+Hit the APIs from a client of choice (eg: Postman) using following URL:
+
+http://localhost:9001/pcm/v1/products
+
+For monitoring, hit http://localhost:9002/hystrix.html from a browser
+
+Note: RequestRouter will discover the microservice from Eureka Server and load balance the incoming requests.
+==============================================================================================================================================
+
+
+PCM - Product-Catalogue-Management - APIs 
+-----------------------------------------
+
+This is the core service exhibiting functionalities required by the end user. The following methods are exposed for required functionalities.
+
+1) POST - v1/products/ - To add new products. The sample request body is given below
+	{
+	"name":"Nokia 1100",
+	"type":"mobile phone",
+	"description":"Nokia 1100 Phone",
+	"manufacturer":"Nokia"
+	}
+2) GET - v1/products/	-	To get all listed product details
+3) GET - v1/products/searchByType?type=tv -	To search by product type. Type query param is mandatory
+4) GET - v1/products/searchByManu?manu=LG -	To list out products by manufacturer. Manu query param is mandatory
+5) DELETE - v1/products/1	- To remove product by id from the system
+
+Future Enhancement: 
+1) Can communicate internally the price management for showing price of each product
+2) In-memory db is used in stand alone mode. Can run a better db in an shared mode between running instances, which can be configured via properties on the running instances. This is kept this way in this iteration, to check the load is balanced between two different requests.
+
+Note: Screenshots are attached in the document
