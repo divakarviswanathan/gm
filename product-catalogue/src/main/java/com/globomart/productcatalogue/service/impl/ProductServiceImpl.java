@@ -1,5 +1,6 @@
 package com.globomart.productcatalogue.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.globomart.productcatalogue.entity.Product;
 import com.globomart.productcatalogue.repository.ProductRepository;
+import com.globomart.productcatalogue.rest.entity.ProductDTO;
 import com.globomart.productcatalogue.service.ProductService;
+import com.globomart.productcatalogue.util.ObjectConverterUtil;
 
 /**
  * @author divakar
@@ -19,28 +22,52 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+	@Autowired
+	private ObjectConverterUtil objectConverterUtil;
+
     @Override
-    public void addProduct(Product product) {
-		productRepository.saveAndFlush(product);
+	public void addProduct(Product product) throws Exception {
+		productRepository.save(product);
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+	public List<ProductDTO> getAllProducts() throws Exception {
+		List<Product> products = productRepository.findAll();
+		List<ProductDTO> productDTOs = new ArrayList<>();
+		if (products != null && products.size() > 0) {
+			for (Product product : products) {
+				productDTOs.add(objectConverterUtil.domainToDTOObject(product));
+			}
+		}
+		return productDTOs;
     }
 
     @Override
-    public List<Product> getProductsByType(String type) {
-        return productRepository.findByType(type);
+	public List<ProductDTO> getProductsByType(String type) throws Exception {
+		List<Product> products = productRepository.findByType(type);
+		List<ProductDTO> productDTOs = new ArrayList<>();
+		if (products != null && products.size() > 0) {
+			for (Product product : products) {
+				productDTOs.add(objectConverterUtil.domainToDTOObject(product));
+			}
+		}
+		return productDTOs;
     }
 
     @Override
-    public void removeProduct(long id) {
+	public void removeProduct(long id) throws Exception {
         productRepository.delete(id);
     }
 
 	@Override
-	public List<Product> getProductsByManufacturer(String manufacturer) throws Exception {
-		return productRepository.findByManufacturer(manufacturer);
+	public List<ProductDTO> getProductsByManufacturer(String manufacturer) throws Exception {
+		List<Product> products = productRepository.findByManufacturer(manufacturer);
+		List<ProductDTO> productDTOs = new ArrayList<>();
+		if (products != null && products.size() > 0) {
+			for (Product product : products) {
+				productDTOs.add(objectConverterUtil.domainToDTOObject(product));
+			}
+		}
+		return productDTOs;
 	}
 }

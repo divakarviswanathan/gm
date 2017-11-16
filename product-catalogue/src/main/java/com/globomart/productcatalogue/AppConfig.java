@@ -22,7 +22,7 @@ public class AppConfig {
     public DataSource dataSource() {
         EmbeddedDatabaseBuilder embeddedDatabaseBuilder = new EmbeddedDatabaseBuilder();
 		EmbeddedDatabase embeddedDatabase = embeddedDatabaseBuilder.setType(EmbeddedDatabaseType.H2)
-				.addScript("create-db.sql").addScript("insert-data.sql").build();
+				.addScript("ddl.sql").addScript("import.sql").build();
         return embeddedDatabase;
     }
 

@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.globomart.productcatalogue.entity.Product;
+import com.globomart.productcatalogue.rest.entity.ProductDTO;
 import com.globomart.productcatalogue.service.ProductService;
+import com.globomart.productcatalogue.util.ObjectConverterUtil;
 
 /**
  * @author divakar
@@ -28,18 +29,21 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+	@Autowired
+	private ObjectConverterUtil objectConverterUtil;
+
     @RequestMapping(method = RequestMethod.POST)
-    public void addNewProduct(@RequestBody Product product) {
+	public void addNewProduct(@RequestBody ProductDTO productDTO) {
 		logger.info("Entering add products");
         try {
-            productService.addProduct(product);
+			productService.addProduct(objectConverterUtil.dtoToDomainObject(productDTO));
         } catch (Exception e) {
             logger.error("Error occurred while adding new product", e);
         }
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<Product> getAllProducts() {
+	public List<ProductDTO> getAllProducts() {
 		logger.info("Entering get all products");
         try {
             return productService.getAllProducts();
@@ -50,7 +54,7 @@ public class ProductController {
     }
 
 	@RequestMapping(value = "/searchByType", method = RequestMethod.GET)
-	public List<Product> getProductsByType(@RequestParam(value = "type", required = true) final String type) {
+	public List<ProductDTO> getProductsByType(@RequestParam(value = "type", required = true) final String type) {
 		logger.info("Entering get products by type");
 		try {
 			return productService.getProductsByType(type);
@@ -61,7 +65,7 @@ public class ProductController {
 	}
 
 	@RequestMapping(value = "/searchByManu", method = RequestMethod.GET)
-	public List<Product> getProductsByManufacturer(
+	public List<ProductDTO> getProductsByManufacturer(
 			@RequestParam(value = "manu", required = true) final String manufacturer) {
 		logger.info("Entering get products by type");
 		try {
